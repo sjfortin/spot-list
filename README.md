@@ -6,4 +6,6 @@ Tech used:
 - spotify-api
 - heroku
 
-Deplotyed at [https://spot-list.herokuapp.com/](https://spot-list.herokuapp.com/)
+Front-end deployed at [https://spot-list.herokuapp.com/](https://spot-list.herokuapp.com/)
+
+Back-end login at [https://spot-list-backend.herokuapp.com/login](https://spot-list.herokuapp.com/login)
