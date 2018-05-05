@@ -1,31 +1,9 @@
 import React, { Component } from 'react';
+import queryString from 'query-string';
 import './App.css';
 
 let defaultStyle = {
   color: '#202020'
-};
-let fakeServerData = {
-  user: {
-    name: 'Sam',
-    playlists: [
-      {
-        name: 'My favorites',
-        songs: [
-          { name: 'Fire', duration: 1345 },
-          { name: '288', duration: 1236 },
-          { name: 'Eleanor Rigby', duration: 1234 }
-        ]
-      },
-      {
-        name: 'Discover Weekly',
-        songs: [
-          { name: 'The sun', duration: 1345 },
-          { name: 'Where were you?', duration: 1236 },
-          { name: 'Memoriez', duration: 876 }
-        ]
-      }
-    ]
-  }
 };
 
 class PlaylistCounter extends Component {
@@ -58,7 +36,12 @@ class Filter extends Component {
   render() {
     return (
       <div style={defaultStyle}>
-        <input style={{padding: '5px', borderRadius: '5px', outline: 'none'}} placeholder="Search playlists" type="text" onKeyUp={event => this.props.onTextChange(event.target.value)} />
+        <input
+          style={{ padding: '5px', borderRadius: '5px', outline: 'none' }}
+          placeholder="Search playlists"
+          type="text"
+          onKeyUp={event => this.props.onTextChange(event.target.value)}
+        />
       </div>
     );
   }
@@ -68,9 +51,21 @@ class Playlist extends Component {
   render() {
     let playlist = this.props.playlist;
     return (
-      <div style={{ ...defaultStyle, display: 'inline-block', width: '25%', border: '1px solid #202020', borderRadius: '6px', margin: '10px', padding: '10px' }}>
+      <div
+        style={{
+          ...defaultStyle,
+          display: 'inline-block',
+          width: '25%',
+          border: '1px solid #202020',
+          borderRadius: '6px',
+          margin: '10px',
+          padding: '10px'
+        }}
+      >
         <h3>{playlist.name}</h3>
-        <ul style={{ ...defaultStyle, listStyleType: 'none', padding: '0'}}>{playlist.songs.map(song => <li>{song.name}</li>)}</ul>
+        <ul style={{ ...defaultStyle, listStyleType: 'none', padding: '0' }}>
+          {playlist.songs.map(song => <li>{song.name}</li>)}
+        </ul>
       </div>
     );
   }
@@ -85,9 +80,22 @@ class App extends Component {
     };
   }
   componentDidMount() {
-    setTimeout(() => {
-      this.setState({ serverData: fakeServerData });
-    }, 1000);
+    let parsed = queryString.parse(window.location.search);
+    let accessToken = parsed.access_token;
+    fetch('https://api.spotify.com/v1/me/', {
+      headers: {
+        Authorization: 'Bearer ' + accessToken
+      }
+    }).then(response =>
+      response.json().then(data => {
+        console.log(data);
+        this.setState({
+          user: {
+            name: data.id
+          }
+        });
+      })
+    );
   }
   render() {
     let playlistToRender = this.state.serverData.user
@@ -110,7 +118,10 @@ class App extends Component {
             {playlistToRender.map(playlist => <Playlist playlist={playlist} />)}
           </div>
         ) : (
-          <h1 style={defaultStyle}>Loading...</h1>
+          <div style={{ margin: '20px' }}>
+            <h1>Login to spot-list</h1>
+            <button onClick={() => (window.location = 'http://localhost:8888/login')}>Sign in with Spotify</button>
+          </div>
         )}
       </div>
     );
