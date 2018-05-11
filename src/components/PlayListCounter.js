@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
+
+const Title = styled.h1`
+  font-size: 1.5em;
+  text-align: center;
+  color: palevioletred;
+`;
 
 export default class PlayListCounter extends Component {
   render() {
     return (
-      <div style={{ width: '40%', display: 'inline-block' }}>
-        <h2>{this.props.playlists.length} playlists</h2>
+      <div>
+        <Title>{this.props.playlists.length} playlists</Title>
       </div>
     );
   }
