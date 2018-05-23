@@ -45,10 +45,8 @@ class App extends Component {
       response.json().then(data => {
         console.log('me', data);
         this.setState({
-          serverData: {
-            user: {
-              name: data.id
-            }
+          user: {
+            name: data.id
           }
         });
       })
@@ -57,32 +55,31 @@ class App extends Component {
       headers: {
         Authorization: 'Bearer ' + accessToken
       }
-    }).then(response =>
-      response.json().then(data => {
-        console.log('playlists', data);
-        this.setState({
-          serverData: {
-            user: {
-              playlists: data.items.map(item => ({
-                name: item.name,
-                songs: []
-              }))
-            }
-          }
-        });
-      })
-    );
+    })
+      .then(response =>
+        response.json().then(data => {
+          console.log('playlists', data);
+          this.setState({
+            playlists: data.items.map(item => ({
+              name: item.name,
+              imgUrl: item.images[0].url,
+              songs: []
+            }))
+          });
+        })
+      )
+      .catch(error => console.error(error));
   }
   render() {
     let playlistToRender =
-      this.state.serverData.user && this.state.serverData.user.playlists
-        ? this.state.serverData.user.playlists.filter(playlist =>
+      this.state.user && this.state.playlists
+        ? this.state.playlists.filter(playlist =>
             playlist.name.toLowerCase().includes(this.state.filterString.toLowerCase())
           )
         : [];
     return (
       <div className="App">
-        {this.state.serverData.user ? (
+        {this.state.user && this.state.playlists ? (
           <div>
             <Title primary>Playlists</Title>
             <PlaylistCounter playlists={playlistToRender} />

@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 export default class Playlists extends Component {
   render() {
     let playlist = this.props.playlist;
+    let playlistImg = {
+      width: '100%'
+    }
     return (
       <div
         style={{
@@ -14,6 +17,7 @@ export default class Playlists extends Component {
           padding: '10px'
         }}
       >
+        <img src={playlist.imgUrl} alt={playlist.name} style={playlistImg} />
         <h3>{playlist.name}</h3>
         <ul style={{ listStyleType: 'none', padding: '0' }}>{playlist.songs.map(song => <li>{song.name}</li>)}</ul>
       </div>
