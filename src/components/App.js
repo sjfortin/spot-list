@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import queryString from 'query-string';
 import '../App.css';
 import styled from 'styled-components';
 
@@ -35,8 +34,9 @@ class App extends Component {
     };
   }
   componentDidMount() {
-    let parsed = queryString.parse(window.location.search);
-    let accessToken = parsed.access_token;
+    let accessToken = new URLSearchParams(window.location.search).get('access_token');
+    console.log('access', accessToken);
+    
     if (!accessToken) {
       return;
     }
