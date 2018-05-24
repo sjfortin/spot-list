@@ -37,6 +37,9 @@ class App extends Component {
   componentDidMount() {
     let parsed = queryString.parse(window.location.search);
     let accessToken = parsed.access_token;
+    if (!accessToken) {
+      return;
+    }
     fetch('https://api.spotify.com/v1/me/', {
       headers: {
         Authorization: 'Bearer ' + accessToken
@@ -79,7 +82,7 @@ class App extends Component {
         : [];
     return (
       <div className="App">
-        {this.state.user && this.state.playlists ? (
+        {this.state.user ? (
           <div>
             <Title primary>Playlists</Title>
             <PlaylistCounter playlists={playlistToRender} />
@@ -94,7 +97,15 @@ class App extends Component {
         ) : (
           <div>
             <Title>Login to spot-list</Title>
-            <Button onClick={() => (window.location = 'http://localhost:8888/login')}>Sign in with Spotify</Button>
+            <Button
+              onClick={() => {
+                window.location = window.location.href.includes('localhost')
+                  ? 'http://localhost:8888/login'
+                   : 'https://spot-list.herokuapp.com/login';
+              }}
+            >
+              Sign in with Spotify
+            </Button>
           </div>
         )}
       </div>
